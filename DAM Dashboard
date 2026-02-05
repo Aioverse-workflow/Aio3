@@ -1,0 +1,385 @@
+import React from 'react';
+import { 
+  Download, 
+  ExternalLink, 
+  Copy, 
+  Layers, 
+  Type, 
+  Palette, 
+  Box, 
+  Image as ImageIcon,
+  Search,
+  ShoppingBag,
+  ArrowRight
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ImageWithFallback } from './components/figma/ImageWithFallback';
+
+// --- Styled Components for the "Boxy/Rounded" Look ---
+
+const CapsuleContainer = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+  <div className={`relative p-1 rounded-[54px] overflow-hidden ${className}`}>
+    {/* Decorative Glowing Blobs behind the glass */}
+    <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 blur-[120px] rounded-full" />
+    <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-blue-500/5 blur-[150px] rotate-45 rounded-full" />
+
+    <div className="relative backdrop-blur-3xl bg-white/5 border border-white/10 rounded-[48px] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] overflow-hidden min-h-[700px] flex flex-col">
+      {/* Subtle Inner Glow */}
+      <div className="absolute inset-0 pointer-events-none rounded-[48px] ring-1 ring-inset ring-white/20" />
+      {children}
+    </div>
+  </div>
+);
+
+const PillButton = ({ children, active, onClick }: { children: React.ReactNode, active?: boolean, onClick?: () => void }) => (
+  <button 
+    onClick={onClick}
+    className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 ${
+      active 
+        ? 'bg-white/90 text-black shadow-lg shadow-white/10' 
+        : 'bg-white/5 text-white/40 hover:text-white hover:bg-white/10 border border-white/5'
+    }`}
+  >
+    {children}
+  </button>
+);
+
+const FloatingTag = ({ label, value, x, y }: { label: string, value: string, x: string, y: string }) => (
+  <motion.div 
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className="absolute z-10 hidden lg:flex items-center gap-3"
+    style={{ left: x, top: y }}
+  >
+    <div className="w-1.5 h-1.5 rounded-full bg-white ring-4 ring-white/10" />
+    <div className="h-[1px] w-16 bg-white/20" />
+    <div className="backdrop-blur-md bg-black/60 border border-white/10 p-2.5 px-4 rounded-xl">
+      <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-0.5">{label}</p>
+      <p className="text-xs text-white font-bold">{value}</p>
+    </div>
+  </motion.div>
+);
+
+// --- Content Sections ---
+
+const LogoSection = () => (
+  <div className="flex h-full p-8 gap-8">
+    <div className="w-16 backdrop-blur-xl bg-white/5 rounded-full border border-white/10 flex flex-col items-center py-10 gap-8 shrink-0">
+      <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center text-black font-black text-xs">%</div>
+      <div className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Aiotize System</div>
+      <div className="flex-1" />
+      <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
+        <ImageWithFallback src="https://i.pravatar.cc/100?u=tech" alt="user" />
+      </div>
+    </div>
+
+    <div className="flex-1 grid grid-cols-12 grid-rows-6 gap-6">
+      <div className="col-span-8 row-span-4 backdrop-blur-xl bg-white/5 rounded-[40px] p-12 border border-white/10 relative group overflow-hidden shadow-2xl">
+        <div className="absolute top-8 right-8 text-[10px] font-black uppercase tracking-widest text-white/20">01 - PRIMARY MARK</div>
+        <div className="h-full flex flex-col justify-center gap-6">
+           <div className="flex items-center gap-6">
+              <div className="w-24 h-24 bg-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/40 group-hover:scale-105 transition-transform duration-500 relative">
+                <div className="absolute inset-0 bg-white/20 rounded-3xl blur-sm" />
+                <span className="relative text-white font-bold text-5xl italic">A</span>
+              </div>
+              <span className="text-7xl font-black tracking-tighter text-white">aiotize.</span>
+           </div>
+           <p className="text-white/40 max-w-md text-lg leading-relaxed">Precision-engineered identity for a generation of intelligent automation and seamless connectivity.</p>
+        </div>
+      </div>
+
+      <div className="col-span-4 row-span-2 bg-white/90 backdrop-blur-xl rounded-[40px] p-8 flex items-center justify-center relative shadow-2xl">
+        <span className="text-black text-4xl font-black tracking-tighter">aiotize.</span>
+        <div className="absolute top-6 right-8 text-[10px] font-black uppercase tracking-widest text-black/20">02 - LIGHT</div>
+      </div>
+
+      <div className="col-span-4 row-span-2 bg-blue-600/20 backdrop-blur-xl rounded-[40px] p-8 flex items-center justify-center relative border border-blue-500/30 group overflow-hidden">
+        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl group-hover:rotate-12 transition-transform">
+          <span className="text-blue-600 font-bold text-3xl italic">A</span>
+        </div>
+        <div className="absolute top-6 right-8 text-blue-400/40 text-[10px] font-black uppercase tracking-widest">03 - MARK</div>
+      </div>
+
+      <div className="col-span-12 row-span-2 backdrop-blur-xl bg-white/5 rounded-[40px] border border-white/10 p-8 flex items-center justify-between group overflow-hidden">
+         <div className="flex flex-col gap-2">
+           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Scale & Clearance</span>
+           <h4 className="text-2xl font-bold text-white">Maximum Legibility Guidelines</h4>
+         </div>
+         <div className="flex gap-4 opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-60 transition-all">
+            <div className="w-12 h-12 bg-white/10 rounded flex items-center justify-center border border-white/20"><span className="text-white font-bold italic">A</span></div>
+            <div className="w-16 h-16 bg-white/10 rounded flex items-center justify-center border border-white/20"><span className="text-white font-bold italic">A</span></div>
+            <div className="w-20 h-20 bg-white/10 rounded flex items-center justify-center border border-white/20"><span className="text-white font-bold italic text-2xl">A</span></div>
+         </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ColorSection = () => (
+  <div className="flex h-full p-8 gap-8">
+    <div className="w-16 backdrop-blur-xl bg-white/5 rounded-full border border-white/10 flex flex-col items-center py-10 gap-8 shrink-0">
+      <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white"><Palette size={14} /></div>
+      <div className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Palette Matrix</div>
+    </div>
+
+    <div className="flex-1 grid grid-cols-12 grid-rows-6 gap-6">
+      <div className="col-span-12 row-span-4 grid grid-cols-3 gap-6">
+         <div className="bg-[#0066FF] rounded-[40px] p-10 flex flex-col justify-end group cursor-pointer relative overflow-hidden shadow-2xl">
+            <div className="absolute top-8 right-8 text-[10px] font-black uppercase text-white/40">PRIMARY</div>
+            <h4 className="text-white text-3xl font-black tracking-tighter">Aiotize Blue</h4>
+            <div className="flex items-center justify-between mt-4">
+              <span className="text-white/60 font-mono text-sm uppercase">#0066FF</span>
+              <button className="w-10 h-10 bg-white/10 backdrop-blur rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"><Copy size={16} /></button>
+            </div>
+         </div>
+         <div className="bg-white/90 backdrop-blur-xl rounded-[40px] p-10 flex flex-col justify-end group cursor-pointer relative shadow-2xl">
+            <div className="absolute top-8 right-8 text-[10px] font-black uppercase text-black/20">SURFACE</div>
+            <h4 className="text-black text-3xl font-black tracking-tighter">Pure Light</h4>
+            <div className="flex items-center justify-between mt-4">
+              <span className="text-black/40 font-mono text-sm uppercase">#FFFFFF</span>
+              <button className="w-10 h-10 bg-black/5 rounded-full flex items-center justify-center text-black opacity-0 group-hover:opacity-100 transition-opacity"><Copy size={16} /></button>
+            </div>
+         </div>
+         <div className="bg-black/40 backdrop-blur-xl rounded-[40px] p-10 flex flex-col justify-end group cursor-pointer relative border border-white/10 shadow-2xl">
+            <div className="absolute top-8 right-8 text-[10px] font-black uppercase text-white/10">VOID</div>
+            <h4 className="text-white text-3xl font-black tracking-tighter">Deep Space</h4>
+            <div className="flex items-center justify-between mt-4">
+              <span className="text-white/20 font-mono text-sm uppercase">#09090B</span>
+              <button className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"><Copy size={16} /></button>
+            </div>
+         </div>
+      </div>
+
+      <div className="col-span-12 row-span-2 backdrop-blur-xl bg-white/5 rounded-[40px] border border-white/10 p-8 flex items-center justify-between">
+         <div className="flex flex-col gap-1">
+           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Secondary Palette</span>
+           <div className="flex gap-4 mt-2">
+             {['#14B8A6', '#8B5CF6', '#F43F5E', '#F59E0B', '#94A3B8'].map((c, i) => (
+               <div key={i} className="w-16 h-16 rounded-2xl border border-white/10 group relative" style={{ backgroundColor: c }}>
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                   <span className="text-[10px] text-white font-mono uppercase">{c.slice(1)}</span>
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
+         <div className="text-right">
+           <p className="text-xs text-white/20 font-bold uppercase tracking-widest mb-2">Compliance Matrix</p>
+           <div className="flex gap-2">
+              <div className="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded text-[10px] font-black uppercase">AA Pass</div>
+              <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded text-[10px] font-black uppercase">WCAG 2.1</div>
+           </div>
+         </div>
+      </div>
+    </div>
+  </div>
+);
+
+const TypeSection = () => (
+  <div className="flex h-full p-8 gap-8">
+    <div className="w-16 backdrop-blur-xl bg-white/5 rounded-full border border-white/10 flex flex-col items-center py-10 gap-8 shrink-0">
+      <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white"><Type size={14} /></div>
+      <div className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Typography</div>
+    </div>
+
+    <div className="flex-1 grid grid-cols-12 grid-rows-6 gap-6">
+      <div className="col-span-12 row-span-4 backdrop-blur-xl bg-white/5 rounded-[40px] p-12 border border-white/10 relative overflow-hidden group shadow-2xl">
+        <div className="absolute top-8 right-8 text-[10px] font-black uppercase tracking-widest text-white/10">PRIMARY TYPEFACE</div>
+        <div className="grid grid-cols-2 h-full gap-12">
+           <div className="flex flex-col justify-center">
+              <h3 className="text-[120px] font-black tracking-tighter text-white leading-none">Inter</h3>
+              <p className="text-white/40 mt-4 max-w-xs text-lg">A variable font family carefully crafted & designed for computer screens.</p>
+              <div className="flex gap-4 mt-8">
+                {['Regular', 'Medium', 'Bold', 'Black'].map(w => (
+                  <div key={w} className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[10px] font-black text-white uppercase tracking-widest">{w}</div>
+                ))}
+              </div>
+           </div>
+           <div className="grid grid-cols-8 gap-2 content-center opacity-5 group-hover:opacity-30 transition-opacity duration-700">
+             {"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^".split('').map((char, i) => (
+               <div key={i} className="aspect-square flex items-center justify-center text-xl font-black text-white border border-white/5 rounded-lg">{char}</div>
+             ))}
+           </div>
+        </div>
+      </div>
+
+      <div className="col-span-12 row-span-2 bg-white/90 backdrop-blur-xl rounded-[40px] p-10 flex items-center justify-between shadow-2xl">
+         <div className="flex flex-col gap-1">
+           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-black/20 font-mono">Hierarchy - Display</span>
+           <h4 className="text-5xl font-black tracking-tighter text-black">Aiotize Intelligent Systems.</h4>
+         </div>
+         <div className="text-right flex flex-col gap-2">
+            <span className="text-xs font-black text-black/30 uppercase tracking-widest">Weight: Black</span>
+            <span className="text-xs font-black text-black/30 uppercase tracking-widest">Size: 72pt</span>
+         </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default function App() {
+  const [activeTab, setActiveTab] = React.useState('showcase');
+
+  return (
+    <div className="min-h-screen bg-[#0A0A0A] p-4 lg:p-12 font-sans selection:bg-blue-500/30 flex items-center justify-center overflow-hidden relative">
+      {/* Background Mesh Gradient */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black" />
+      
+      <div className="max-w-7xl w-full relative z-10">
+        <CapsuleContainer>
+          {/* Header Area */}
+          <header className="p-10 flex items-center justify-between z-20">
+            <div className="bg-white/90 backdrop-blur-xl p-2.5 px-8 rounded-full flex items-center gap-3 shadow-xl group cursor-pointer hover:scale-105 transition-transform">
+              <span className="text-black font-black italic text-2xl tracking-tighter">GLITCH</span>
+            </div>
+            
+            <nav className="flex items-center gap-2 backdrop-blur-xl bg-white/5 p-2 rounded-full border border-white/10 shadow-inner">
+              <PillButton active={activeTab === 'showcase'} onClick={() => setActiveTab('showcase')}>Showcase</PillButton>
+              <PillButton active={activeTab === 'logos'} onClick={() => setActiveTab('logos')}>Logos</PillButton>
+              <PillButton active={activeTab === 'colors'} onClick={() => setActiveTab('colors')}>Colors</PillButton>
+              <PillButton active={activeTab === 'typography'} onClick={() => setActiveTab('typography')}>Type</PillButton>
+            </nav>
+
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 backdrop-blur-xl bg-white/5 rounded-full flex items-center justify-center text-white border border-white/10 hover:bg-white/90 hover:text-black transition-all cursor-pointer">
+                <Search size={20} />
+              </div>
+              <div className="w-12 h-12 backdrop-blur-xl bg-white/5 rounded-full flex items-center justify-center text-white border border-white/10 hover:bg-white/90 hover:text-black transition-all cursor-pointer">
+                <ShoppingBag size={20} />
+              </div>
+              <div className="bg-white/90 backdrop-blur-xl text-black p-1 pl-6 pr-1 rounded-full flex items-center gap-4 group cursor-pointer hover:bg-white transition-colors">
+                <span className="text-[10px] font-black uppercase tracking-widest">Contact</span>
+                <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white">
+                  <ArrowRight size={18} />
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Dynamic Content Area */}
+          <main className="flex-1 relative overflow-hidden">
+            <AnimatePresence mode="wait">
+              {activeTab === 'showcase' && (
+                <motion.div 
+                  key="showcase"
+                  initial={{ opacity: 0, scale:0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  className="absolute inset-0 flex flex-col p-8 pt-0"
+                >
+                  <div className="relative flex-1 rounded-[40px] overflow-hidden group shadow-2xl">
+                    <ImageWithFallback 
+                      src="https://images.unsplash.com/photo-1662973487707-a5bd2bb695a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjeWJlcnB1bmslMjByb2JvdCUyMGFybSUyMHRlY2glMjB3aGl0ZXxlbnwxfHx8fDE3NzAzMjUyNjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                      alt="Cyberpunk Tech"
+                      className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-75 transition-all duration-700"
+                    />
+                    
+                    <FloatingTag label="Product" value="Neuro-Sync v2" x="20%" y="30%" />
+                    <FloatingTag label="Design" value="Aiotize Industrial" x="65%" y="45%" />
+                    <FloatingTag label="Price" value="$2,450.00" x="75%" y="25%" />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
+                    
+                    <div className="absolute bottom-12 left-12 max-w-xl">
+                      <h2 className="text-white text-7xl font-black leading-[0.9] tracking-tighter mb-8">
+                        FUTURE<br />
+                        FASHION,<br />
+                        <span className="text-white/30">REDEFINED.</span>
+                      </h2>
+                      <div className="flex items-center gap-4">
+                        <button className="px-10 py-5 bg-white/90 backdrop-blur-xl text-black rounded-full font-black text-[10px] uppercase tracking-widest flex items-center gap-3 group/btn hover:bg-white hover:scale-105 transition-all shadow-2xl">
+                          Shop Now
+                          <ArrowRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="absolute bottom-12 right-12 w-48 aspect-square backdrop-blur-2xl bg-white/5 rounded-[32px] border border-white/10 p-4 flex flex-col justify-between group/mini overflow-hidden">
+                       <div className="relative h-full w-full rounded-2xl overflow-hidden mb-2">
+                        <ImageWithFallback 
+                          src="https://images.unsplash.com/photo-1610818988099-b8a4c2583d4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmdXR1cmlzdGljJTIwY2l0eSUyMGJsdWVwcmludCUyMGJsdWV8ZW58MXx8fHwxNzcwMzI1MjYxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                          alt="Blueprint"
+                          className="w-full h-full object-cover group-hover/mini:scale-110 transition-transform opacity-40 group-hover/mini:opacity-80 transition-all"
+                        />
+                       </div>
+                       <p className="text-[10px] text-white/30 font-black uppercase tracking-widest">Blueprint View</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === 'logos' && (
+                <motion.div 
+                  key="logos"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="h-full"
+                >
+                  <LogoSection />
+                </motion.div>
+              )}
+
+              {activeTab === 'colors' && (
+                <motion.div 
+                  key="colors"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="h-full"
+                >
+                  <ColorSection />
+                </motion.div>
+              )}
+
+              {activeTab === 'typography' && (
+                <motion.div 
+                  key="typography"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="h-full"
+                >
+                  <TypeSection />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </main>
+
+          {/* Footer Branding Area */}
+          <footer className="p-8 pt-0 flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div className="flex -space-x-3">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0A0A0A] bg-zinc-800 overflow-hidden">
+                    <ImageWithFallback src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
+                  </div>
+                ))}
+              </div>
+              <p className="text-zinc-500 text-xs font-medium">Join 2,400+ designers using the Aiotize System.</p>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              <span className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">System Status: Optimal</span>
+            </div>
+          </footer>
+        </CapsuleContainer>
+
+        {/* Outer Decor */}
+        <div className="mt-12 flex justify-center">
+          <div className="bg-white p-1 rounded-full flex items-center gap-3 pr-5 shadow-lg">
+             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-zinc-100">
+               <ImageWithFallback src="https://i.pravatar.cc/100?u=bee" alt="creator" />
+             </div>
+             <div>
+                <p className="text-[10px] font-black uppercase tracking-tighter leading-none">bee_ui.ux</p>
+                <p className="text-[10px] text-zinc-400 font-bold">Follow for more</p>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
